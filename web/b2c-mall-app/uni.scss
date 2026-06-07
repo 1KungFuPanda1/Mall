@@ -1,0 +1,89 @@
+// uView Plus 主题变量（必须在自定义变量之前引入）
+@import "uview-plus/theme.scss";
+
+// ============================================
+// B2C 移动端商城 — 全局样式变量
+// 统一的主题色、字体、间距等样式定义
+// ============================================
+
+// ==================== 主题色系 ====================
+$primary-color: #FF6034;          // 主色调（品牌橙色，所有按钮、高亮用）
+$primary-light: #FF8A6A;          // 主色调浅色（hover、背景用）
+$primary-dark: #E04D24;           // 主色调深色（按下状态用）
+$price-color: #FF4444;            // 价格红色（所有价格显示用）
+
+// ==================== 辅助色 ====================
+$bg-color: #F5F5F5;               // 页面背景灰色
+$white: #FFFFFF;                   // 白色
+$border-color: #EEEEEE;            // 边框颜色（分割线、卡片边框）
+$text-primary: #333333;            // 主要文字色（标题、重要信息）
+$text-secondary: #666666;          // 次要文字色（描述、辅助信息）
+$text-light: #999999;              // 浅色文字（提示、占位符）
+$success-color: #07C160;           // 成功色（支付成功、订单完成）
+$warning-color: #FF9500;           // 警告色
+
+// ==================== 字体 & 间距 ====================
+$font-sm: 24rpx;                   // 小号字体
+$font-base: 28rpx;                 // 基准字体
+$font-lg: 32rpx;                   // 大号字体（标题）
+$font-xl: 36rpx;                   // 特大号字体
+
+$spacing-xs: 10rpx;                // 极小间距
+$spacing-sm: 16rpx;                // 小间距
+$spacing-base: 20rpx;              // 基准间距
+$spacing-md: 24rpx;                // 中等间距
+$spacing-lg: 32rpx;                // 大间距
+
+// ==================== 圆角 ====================
+$radius-sm: 8rpx;                  // 小圆角
+$radius-base: 12rpx;               // 基准圆角（卡片、按钮）
+$radius-round: 999rpx;             // 全圆角（胶囊按钮、标签）
+
+// ==================== 页面通用样式 ====================
+// 页面容器
+page {
+  background-color: $bg-color;
+  font-size: $font-base;
+  color: $text-primary;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+// 通用卡片样式
+.card {
+  background-color: $white;
+  border-radius: $radius-base;
+  margin: $spacing-sm $spacing-base;
+  padding: $spacing-base;
+}
+
+// 通用价格样式
+.price {
+  color: $price-color;
+  font-weight: bold;
+  font-size: $font-lg;
+}
+
+// 通用按钮样式
+.btn-primary {
+  background: linear-gradient(135deg, $primary-color, $primary-light);
+  color: $white;
+  border-radius: $radius-base;
+  border: none;
+  font-size: $font-base;
+}
+
+// 单行省略号
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 两行省略号
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

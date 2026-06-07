@@ -1,0 +1,2319 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "B2C 移动端商城 API 文档",
+        "description": "基于 Spring Boot 3 + MyBatis-Plus + Redis 的移动端 B2C 商城后端接口文档",
+        "contact": {
+            "name": "开发者名称",
+            "email": "developer@example.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "C端-收货地址",
+            "description": "收货地址增删改查"
+        },
+        {
+            "name": "公共接口",
+            "description": "轮播图和分类查询，无需登录"
+        },
+        {
+            "name": "C端-订单模块",
+            "description": "下单、支付、取消、确认收货等订单操作"
+        },
+        {
+            "name": "后台管理",
+            "description": "管理员登录、商品管理、订单管理、用户管理等后台接口"
+        },
+        {
+            "name": "C端-用户模块",
+            "description": "用户注册、登录、个人信息管理接口"
+        },
+        {
+            "name": "C端-商品模块",
+            "description": "商品浏览、搜索、分类查询接口"
+        },
+        {
+            "name": "C端-购物车模块",
+            "description": "购物车增删改查（Redis Hash存储）"
+        }
+    ],
+    "paths": {
+        "/api/orders/{id}/pay": {
+            "put": {
+                "tags": [
+                    "C端-订单模块"
+                ],
+                "summary": "模拟支付",
+                "description": "模拟订单支付，将状态从待付款变更为已支付",
+                "operationId": "payOrder",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/orders/{id}/confirm": {
+            "put": {
+                "tags": [
+                    "C端-订单模块"
+                ],
+                "summary": "确认收货",
+                "description": "用户收到商品后确认收货，订单状态变更为已完成",
+                "operationId": "confirmReceipt",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/orders/{id}/cancel": {
+            "put": {
+                "tags": [
+                    "C端-订单模块"
+                ],
+                "summary": "取消订单",
+                "description": "取消待付款订单，恢复商品库存",
+                "operationId": "cancelOrder",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/cart/{productId}": {
+            "put": {
+                "tags": [
+                    "C端-购物车模块"
+                ],
+                "summary": "修改数量",
+                "description": "修改购物车中某商品的购买数量",
+                "operationId": "updateQuantity",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "C端-购物车模块"
+                ],
+                "summary": "删除商品",
+                "description": "从购物车中移除指定商品",
+                "operationId": "removeFromCart",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/cart/check/{productId}": {
+            "put": {
+                "tags": [
+                    "C端-购物车模块"
+                ],
+                "summary": "选中/取消选中",
+                "description": "切换购物车中商品的选中状态",
+                "operationId": "checkItem",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/addresses/{id}": {
+            "put": {
+                "tags": [
+                    "C端-收货地址"
+                ],
+                "summary": "修改地址",
+                "description": "修改指定收货地址的信息",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddressSaveRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "C端-收货地址"
+                ],
+                "summary": "删除地址",
+                "description": "删除指定收货地址（逻辑删除）",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/addresses/{id}/default": {
+            "put": {
+                "tags": [
+                    "C端-收货地址"
+                ],
+                "summary": "设为默认",
+                "description": "将指定地址设为默认收货地址",
+                "operationId": "setDefault",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}/status": {
+            "put": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "启用/禁用",
+                "description": "切换用户启用/禁用状态",
+                "operationId": "toggleUserStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/products/{id}": {
+            "put": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "修改商品",
+                "description": "修改商品信息",
+                "operationId": "updateProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "删除商品",
+                "description": "删除商品（逻辑删除）",
+                "operationId": "deleteProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/products/{id}/status": {
+            "put": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "上下架",
+                "description": "切换商品上下架状态",
+                "operationId": "toggleStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/orders/{id}/deliver": {
+            "put": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "发货",
+                "description": "管理员操作发货，状态从已支付变更为待收货",
+                "operationId": "deliverOrder",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/categories/{id}": {
+            "put": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "修改分类",
+                "description": "修改分类名称、排序、状态",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "删除分类",
+                "description": "删除分类（逻辑删除）",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/banners/{id}": {
+            "put": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "修改轮播图",
+                "description": "修改轮播图信息",
+                "operationId": "updateBanner",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Banner"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "删除轮播图",
+                "description": "删除轮播图（逻辑删除）",
+                "operationId": "deleteBanner",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/user/send-sms": {
+            "post": {
+                "tags": [
+                    "C端-用户模块"
+                ],
+                "summary": "发送短信验证码",
+                "description": "向指定手机号发送6位数字验证码，有效期5分钟",
+                "operationId": "sendSms",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendSmsRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/user/register": {
+            "post": {
+                "tags": [
+                    "C端-用户模块"
+                ],
+                "summary": "用户注册",
+                "description": "手机号+验证码+密码注册新账号",
+                "operationId": "register",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/user/login": {
+            "post": {
+                "tags": [
+                    "C端-用户模块"
+                ],
+                "summary": "用户登录",
+                "description": "手机号/邮箱 + 密码登录，返回JWT Token",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "C端-订单模块"
+                ],
+                "summary": "订单列表",
+                "description": "分页查询用户订单，支持按状态筛选",
+                "operationId": "getUserOrders",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageOrderVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "C端-订单模块"
+                ],
+                "summary": "提交订单",
+                "description": "根据购物车已选商品创建订单，使用乐观锁扣减库存",
+                "operationId": "placeOrder",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlaceOrderRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/cart": {
+            "get": {
+                "tags": [
+                    "C端-购物车模块"
+                ],
+                "summary": "购物车列表",
+                "description": "获取当前用户购物车中所有商品",
+                "operationId": "getCartList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CartItemVO"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "C端-购物车模块"
+                ],
+                "summary": "添加购物车",
+                "description": "将商品加入购物车，若已存在则数量+1",
+                "operationId": "addToCart",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/addresses": {
+            "get": {
+                "tags": [
+                    "C端-收货地址"
+                ],
+                "summary": "地址列表",
+                "description": "获取当前用户所有收货地址",
+                "operationId": "list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Address"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "C端-收货地址"
+                ],
+                "summary": "新增地址",
+                "description": "添加一个新收货地址",
+                "operationId": "save",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddressSaveRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/upload": {
+            "post": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "图片上传",
+                "description": "上传商品图片或轮播图",
+                "operationId": "uploadFile",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/products": {
+            "get": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "商品列表",
+                "description": "分页查询所有商品（含已下架）",
+                "operationId": "productList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "categoryId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageProduct"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "新增商品",
+                "description": "添加新商品",
+                "operationId": "addProduct",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/login": {
+            "post": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "管理员登录",
+                "description": "管理员账号密码登录后台管理系统",
+                "operationId": "adminLogin",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminLoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/categories": {
+            "get": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "分类列表",
+                "description": "获取所有商品分类（含已禁用）",
+                "operationId": "categoryList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Category"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "新增分类",
+                "description": "添加新商品分类",
+                "operationId": "addCategory",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/banners": {
+            "get": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "轮播图列表",
+                "description": "获取所有轮播图",
+                "operationId": "bannerList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Banner"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "新增轮播图",
+                "description": "添加新轮播图",
+                "operationId": "addBanner",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Banner"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/user/info": {
+            "get": {
+                "tags": [
+                    "C端-用户模块"
+                ],
+                "summary": "获取当前用户信息",
+                "description": "根据JWT Token获取当前登录用户的详细信息",
+                "operationId": "getUserInfo",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "C端-商品模块"
+                ],
+                "summary": "商品列表",
+                "description": "分页查询商品，支持按分类筛选",
+                "operationId": "listProducts",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "categoryId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageProduct"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "C端-商品模块"
+                ],
+                "summary": "商品详情",
+                "description": "根据商品ID查询详细信息，使用Redis缓存加速",
+                "operationId": "getProductDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/search": {
+            "get": {
+                "tags": [
+                    "C端-商品模块"
+                ],
+                "summary": "商品搜索",
+                "description": "根据关键字模糊搜索商品名称",
+                "operationId": "searchProducts",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageProduct"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "C端-订单模块"
+                ],
+                "summary": "订单详情",
+                "description": "查看订单完整信息及商品明细",
+                "operationId": "getOrderDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "公共接口"
+                ],
+                "summary": "分类列表",
+                "description": "获取所有启用的商品分类",
+                "operationId": "getCategories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Category"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/banners": {
+            "get": {
+                "tags": [
+                    "公共接口"
+                ],
+                "summary": "轮播图列表",
+                "description": "获取所有启用的首页轮播图",
+                "operationId": "getBanners",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Banner"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users": {
+            "get": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "用户列表",
+                "description": "分页查看所有注册用户",
+                "operationId": "userList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageUser"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/statistics/today": {
+            "get": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "今日统计",
+                "description": "今日订单数和营业额统计",
+                "operationId": "todayStatistics",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orders": {
+            "get": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "订单列表",
+                "description": "分页查询所有订单，支持状态筛选",
+                "operationId": "orderList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageOrder"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orders/{id}": {
+            "get": {
+                "tags": [
+                    "后台管理"
+                ],
+                "summary": "订单详情",
+                "description": "查看订单详情",
+                "operationId": "orderDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AddressSaveRequest": {
+                "required": [
+                    "city",
+                    "detail",
+                    "district",
+                    "province",
+                    "receiverName",
+                    "receiverPhone"
+                ],
+                "type": "object",
+                "properties": {
+                    "receiverName": {
+                        "type": "string"
+                    },
+                    "receiverPhone": {
+                        "type": "string"
+                    },
+                    "province": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "detail": {
+                        "type": "string"
+                    },
+                    "isDefault": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "Product": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "version": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "Category": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "sort": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "Banner": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "linkUrl": {
+                        "type": "string"
+                    },
+                    "sort": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SendSmsRequest": {
+                "required": [
+                    "phone"
+                ],
+                "type": "object",
+                "properties": {
+                    "phone": {
+                        "pattern": "^1[3-9]\\d{9}$",
+                        "type": "string"
+                    }
+                }
+            },
+            "RegisterRequest": {
+                "required": [
+                    "password",
+                    "phone",
+                    "smsCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "phone": {
+                        "pattern": "^1[3-9]\\d{9}$",
+                        "type": "string"
+                    },
+                    "password": {
+                        "maxLength": 20,
+                        "minLength": 6,
+                        "type": "string"
+                    },
+                    "smsCode": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginRequest": {
+                "required": [
+                    "account",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "account": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "nickname": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PlaceOrderRequest": {
+                "required": [
+                    "addressId"
+                ],
+                "type": "object",
+                "properties": {
+                    "addressId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "remark": {
+                        "type": "string"
+                    }
+                }
+            },
+            "OrderItemVO": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "productName": {
+                        "type": "string"
+                    },
+                    "productImage": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalAmount": {
+                        "type": "number"
+                    }
+                }
+            },
+            "OrderVO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "orderNo": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "userPhone": {
+                        "type": "string"
+                    },
+                    "addressJson": {
+                        "type": "string"
+                    },
+                    "totalAmount": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "statusDesc": {
+                        "type": "string"
+                    },
+                    "payTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deliveryTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "finishTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItemVO"
+                        }
+                    }
+                }
+            },
+            "AdminLoginRequest": {
+                "type": "object",
+                "properties": {
+                    "account": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "nickname": {
+                        "type": "string"
+                    },
+                    "avatar": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "OrderItem": {
+                "type": "object",
+                "properties": {
+                    "column": {
+                        "type": "string"
+                    },
+                    "asc": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "PageProduct": {
+                "type": "object",
+                "properties": {
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Product"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "current": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "orders": {
+                        "type": "array",
+                        "writeOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "optimizeCountSql": {
+                        "$ref": "#/components/schemas/PageProduct"
+                    },
+                    "searchCount": {
+                        "$ref": "#/components/schemas/PageProduct"
+                    },
+                    "optimizeJoinOfCountSql": {
+                        "type": "boolean",
+                        "writeOnly": true
+                    },
+                    "maxLimit": {
+                        "type": "integer",
+                        "format": "int64",
+                        "writeOnly": true
+                    },
+                    "countId": {
+                        "type": "string",
+                        "writeOnly": true
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "ProductVO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "PageOrderVO": {
+                "type": "object",
+                "properties": {
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderVO"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "current": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "orders": {
+                        "type": "array",
+                        "writeOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "optimizeCountSql": {
+                        "$ref": "#/components/schemas/PageOrderVO"
+                    },
+                    "searchCount": {
+                        "$ref": "#/components/schemas/PageOrderVO"
+                    },
+                    "optimizeJoinOfCountSql": {
+                        "type": "boolean",
+                        "writeOnly": true
+                    },
+                    "maxLimit": {
+                        "type": "integer",
+                        "format": "int64",
+                        "writeOnly": true
+                    },
+                    "countId": {
+                        "type": "string",
+                        "writeOnly": true
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "CartItemVO": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "checked": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Address": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "receiverName": {
+                        "type": "string"
+                    },
+                    "receiverPhone": {
+                        "type": "string"
+                    },
+                    "province": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "detail": {
+                        "type": "string"
+                    },
+                    "isDefault": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "PageUser": {
+                "type": "object",
+                "properties": {
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "current": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "orders": {
+                        "type": "array",
+                        "writeOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "optimizeCountSql": {
+                        "$ref": "#/components/schemas/PageUser"
+                    },
+                    "searchCount": {
+                        "$ref": "#/components/schemas/PageUser"
+                    },
+                    "optimizeJoinOfCountSql": {
+                        "type": "boolean",
+                        "writeOnly": true
+                    },
+                    "maxLimit": {
+                        "type": "integer",
+                        "format": "int64",
+                        "writeOnly": true
+                    },
+                    "countId": {
+                        "type": "string",
+                        "writeOnly": true
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "orderNo": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "addressJson": {
+                        "type": "string"
+                    },
+                    "totalAmount": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "payTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deliveryTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "finishTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "cancelTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "PageOrder": {
+                "type": "object",
+                "properties": {
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "current": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "orders": {
+                        "type": "array",
+                        "writeOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "optimizeCountSql": {
+                        "$ref": "#/components/schemas/PageOrder"
+                    },
+                    "searchCount": {
+                        "$ref": "#/components/schemas/PageOrder"
+                    },
+                    "optimizeJoinOfCountSql": {
+                        "type": "boolean",
+                        "writeOnly": true
+                    },
+                    "maxLimit": {
+                        "type": "integer",
+                        "format": "int64",
+                        "writeOnly": true
+                    },
+                    "countId": {
+                        "type": "string",
+                        "writeOnly": true
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            }
+        }
+    },
+    "x-openapi": {
+        "x-setting": {
+            "customCode": 200,
+            "language": "zh-CN",
+            "enableSwaggerModels": true,
+            "swaggerModelName": "Swagger Models",
+            "enableReloadCacheParameter": false,
+            "enableAfterScript": true,
+            "enableDocumentManage": true,
+            "enableVersion": false,
+            "enableRequestCache": true,
+            "enableFilterMultipartApis": false,
+            "enableFilterMultipartApiMethodType": "POST",
+            "enableHost": false,
+            "enableHostText": "",
+            "enableDynamicParameter": false,
+            "enableDebug": true,
+            "enableFooter": true,
+            "enableFooterCustom": false,
+            "enableSearch": true,
+            "enableOpenApi": true,
+            "enableHomeCustom": false,
+            "enableGroup": true,
+            "enableResponseCode": true
+        },
+        "x-markdownFiles": []
+    }
+}

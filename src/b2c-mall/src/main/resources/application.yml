@@ -1,0 +1,47 @@
+# ============================================
+# B2C 移动端商城 - Spring Boot 应用主配置文件
+# application.yml 为所有环境通用的配置
+# ============================================
+
+# -------------------- 服务器配置 --------------------
+server:
+  port: 8080 # 服务运行端口，默认 8080
+
+# -------------------- Spring 核心配置 --------------------
+spring:
+  application:
+    name: b2c-mall # 应用名称，用于日志和监控标识
+
+  # 激活的配置文件（开发环境），会加载 application-dev.yml 中的配置
+  profiles:
+    active: dev # 激活 dev（开发环境）配置
+
+  # Jackson JSON 序列化配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss # 全局日期格式化格式
+    time-zone: Asia/Shanghai # 时区设置为东八区（北京时间）
+    default-property-inclusion: non_null # 序列化时忽略 null 值字段，减少响应体大小
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 10MB # 单文件上传最大大小限制
+      max-request-size: 50MB # 单次请求总大小限制
+
+# -------------------- MyBatis-Plus 配置 --------------------
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 开启下划线转驼峰映射（数据库 product_name → Java productName）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # SQL 日志输出到控制台（开发阶段便于调试）
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID # 全局主键策略：使用雪花算法生成分布式唯一 ID（Snowflake 算法）
+      logic-delete-field: deleted # 逻辑删除字段名（全局统一）
+      logic-delete-value: 1 # 逻辑删除标记值：1 = 已删除
+      logic-not-delete-value: 0 # 未删除标记值：0 = 未删除
+
+# -------------------- Knife4j 接口文档配置 --------------------
+knife4j:
+  enable: true # 启用 Knife4j 增强功能
+  setting:
+    language: zh_cn # 接口文档界面语言设置为中文

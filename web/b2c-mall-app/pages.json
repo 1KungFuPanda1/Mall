@@ -1,0 +1,160 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "B2C商城",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/register/register",
+      "style": {
+        "navigationBarTitleText": "注册",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/product/list",
+      "style": {
+        "navigationBarTitleText": "商品列表",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/product/search",
+      "style": {
+        "navigationBarTitleText": "搜索商品",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/product/detail",
+      "style": {
+        "navigationBarTitleText": "商品详情",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/cart/cart",
+      "style": {
+        "navigationBarTitleText": "购物车",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/order/confirm",
+      "style": {
+        "navigationBarTitleText": "确认订单",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/order/list",
+      "style": {
+        "navigationBarTitleText": "我的订单",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/order/detail",
+      "style": {
+        "navigationBarTitleText": "订单详情",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/order/pay-success",
+      "style": {
+        "navigationBarTitleText": "支付成功",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/address/list",
+      "style": {
+        "navigationBarTitleText": "收货地址",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/address/edit",
+      "style": {
+        "navigationBarTitleText": "编辑地址",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/user/user",
+      "style": {
+        "navigationBarTitleText": "个人中心",
+        "navigationBarBackgroundColor": "#FF6034",
+        "navigationBarTextStyle": "white"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#FF6034",
+    "backgroundColor": "#F5F5F5",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6034",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/home.svg",
+        "selectedIconPath": "static/tabbar/home-active.svg"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车",
+        "iconPath": "static/tabbar/cart.svg",
+        "selectedIconPath": "static/tabbar/cart-active.svg"
+      },
+      {
+        "pagePath": "pages/order/list",
+        "text": "订单",
+        "iconPath": "static/tabbar/order.svg",
+        "selectedIconPath": "static/tabbar/order-active.svg"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "static/tabbar/user.svg",
+        "selectedIconPath": "static/tabbar/user-active.svg"
+      }
+    ]
+  },
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue"
+    }
+  }
+}

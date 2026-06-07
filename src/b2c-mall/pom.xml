@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- Maven 项目模型版本 -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 父项目：使用 Spring Boot 3.x 作为基础框架 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
+
+    <!-- 项目坐标：组ID、项目ID、版本号 -->
+    <groupId>com.b2c</groupId>
+    <artifactId>b2c-mall</artifactId>
+    <version>1.0.0</version>
+    <name>B2C移动端商城</name>
+    <description>基于Spring Boot 3.x + MyBatis-Plus + Redis的移动端B2C商城后端系统</description>
+
+    <!-- 统一管理依赖版本号 -->
+    <properties>
+        <java.version>17</java.version>
+        <mybatis-plus.version>3.5.6</mybatis-plus.version>
+        <druid.version>1.2.22</druid.version>
+        <knife4j.version>4.5.0</knife4j.version>
+        <jjwt.version>0.12.5</jjwt.version>
+        <aliyun-sms.version>2.0.24</aliyun-sms.version>
+        <hutool.version>5.8.27</hutool.version>
+    </properties>
+
+    <dependencies>
+        <!-- ==================== Spring Boot 核心依赖 ==================== -->
+
+        <!-- Spring Boot Web 启动器：包含 Spring MVC、内嵌 Tomcat -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 数据校验启动器：用于 @Valid 参数校验 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Spring Boot AOP 启动器：用于公共字段自动填充等切面编程 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 测试启动器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ==================== 数据库相关依赖 ==================== -->
+
+        <!-- MySQL 数据库驱动 -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- MyBatis-Plus：增强版 MyBatis，提供通用 CRUD、分页插件、乐观锁等 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <!-- Druid 数据库连接池：阿里巴巴出品，内置 SQL 监控和防火墙 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-3-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+        <!-- ==================== Redis 缓存依赖 ==================== -->
+
+        <!-- Spring Boot Redis 启动器：用于缓存商品数据、存储购物车、验证码等 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- ==================== 认证与安全 ==================== -->
+
+        <!-- JWT (JSON Web Token)：用于用户身份认证，生成和解析令牌 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ==================== 接口文档 ==================== -->
+
+        <!-- Knife4j：Swagger 的增强版，自动生成 RESTful API 文档并支持在线调试 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>${knife4j.version}</version>
+        </dependency>
+
+        <!-- ==================== 工具类库 ==================== -->
+
+        <!-- Hutool：国产 Java 工具集，提供日期处理、字符串操作、加密等常用工具 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <!-- Lombok：通过注解自动生成 getter/setter/构造器等方法，减少样板代码 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ==================== 阿里云短信服务 ==================== -->
+
+        <!-- 阿里云短信 SDK：用于发送注册验证码短信 -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>dysmsapi20170525</artifactId>
+            <version>${aliyun-sms.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven 插件：支持打包为可执行 JAR -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <!-- 打包时排除 Lombok（编译期已处理完） -->
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

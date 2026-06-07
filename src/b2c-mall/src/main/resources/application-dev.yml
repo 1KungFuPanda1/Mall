@@ -1,0 +1,87 @@
+# ============================================
+# B2C 移动端商城 - 开发环境配置文件
+# 仅在 spring.profiles.active=dev 时生效
+# 包含数据库连接、Redis、阿里云短信等敏感配置
+# ============================================
+
+# -------------------- 数据源配置（Druid 连接池） --------------------
+spring:
+  datasource:
+    # Druid 数据源配置
+    type: com.alibaba.druid.pool.DruidDataSource # 指定使用 Druid 连接池
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL 8.0+ JDBC 驱动类
+    url: jdbc:mysql://localhost:3306/b2c_mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root # 数据库用户名（需要替换为实际值）
+    password: mysql # 数据库密码（需要替换为实际值）
+
+    # Druid 连接池详细参数配置
+    druid:
+      initial-size: 5 # 连接池初始化时创建的连接数
+      min-idle: 5 # 连接池中保持的最小空闲连接数
+      max-active: 20 # 连接池中允许的最大活跃连接数
+      max-wait: 60000 # 获取连接的最大等待时间（毫秒），超时抛出异常
+      time-between-eviction-runs-millis: 60000 # 检测空闲连接的间隔时间（毫秒）
+      min-evictable-idle-time-millis: 300000 # 连接在池中最小空闲时间，超过则回收（毫秒）
+      validation-query: SELECT 1 # 用于检测连接是否有效的 SQL 语句
+      test-while-idle: true # 空闲时检测连接有效性
+      test-on-borrow: false # 获取连接时不检测（提高性能）
+      test-on-return: false # 归还连接时不检测（提高性能）
+
+      # Druid 监控统计过滤器
+      stat-view-servlet:
+        enabled: true # 启用 Druid 监控页面
+        url-pattern: /druid/* # 监控页面访问路径
+        login-username: admin # 监控页面登录用户名
+        login-password: admin123 # 监控页面登录密码
+        reset-enable: false # 禁止通过监控页面重置统计数据
+
+      # Druid Web 关联监控过滤器
+      web-stat-filter:
+        enabled: true # 启用 Web 监控
+        url-pattern: /* # 监控所有请求
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" # 排除静态资源和监控页面自身
+
+      # Druid SQL 防火墙过滤器（防止 SQL 注入）
+      filter:
+        wall:
+          enabled: true # 启用 SQL 防火墙
+          config:
+            drop-table-allow: false # 禁止 DROP TABLE 操作
+            delete-allow: true # 允许 DELETE 操作
+            update-allow: true # 允许 UPDATE 操作
+
+  # -------------------- Redis 配置 --------------------
+  data:
+    redis:
+      host: localhost # Redis 服务器地址
+      port: 6379 # Redis 服务端口
+      password: # Redis 密码（如果没有密码则留空）
+      database: 0 # 使用的 Redis 数据库索引（0~15）
+      timeout: 10000ms # 连接超时时间（毫秒）
+      lettuce: # 使用 Lettuce 客户端（Spring Boot 2+ 默认）
+        pool:
+          max-active: 8 # 连接池最大连接数
+          max-idle: 8 # 连接池最大空闲连接数
+          min-idle: 0 # 连接池最小空闲连接数
+          max-wait: -1ms # 连接池获取连接最大等待时间（-1 表示无限等待）
+
+# ============================================
+# -------------------- 自定义业务配置 --------------------
+# ============================================
+app:
+  # JWT（JSON Web Token）认证配置
+  jwt:
+    secret: b2c-mall-jwt-secret-key-2024-very-long-and-secure-random-string-here # JWT 签名密钥（生产环境需使用更复杂的随机字符串）
+    expiration: 86400000 # Token 过期时间：24 小时（毫秒）
+
+  # 阿里云短信服务配置
+  sms:
+    access-key-id: your-access-key-id # 阿里云 RAM 用户 AccessKeyId（需替换为实际值）
+    access-key-secret: your-access-key-secret # 阿里云 RAM 用户 AccessKeySecret（需替换为实际值）
+    sign-name: B2C商城 # 短信签名（需在阿里云短信控制台申请）
+    template-code: SMS_123456789 # 短信模板 CODE（需在阿里云短信控制台申请）
+
+  # 文件上传配置
+  upload:
+    path: d:/uploads # 上传文件保存的绝对路径（避免 Tomcat 临时目录问题）
+    max-size: 10485760 # 文件大小上限 10MB（字节）

@@ -1,0 +1,23 @@
+# IDE
+.idea/
+.trae/
+.vscode/
+
+# Java
+target/
+*.class
+*.jar
+
+# Node
+node_modules/
+dist/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# uni-app
+unpackage/
+
+# Upload
+uploads/

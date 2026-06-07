@@ -1,0 +1,9 @@
+{
+  "name": "b2c-mall-app",
+  "version": "1.0.0",
+  "description": "B2C移动端商城 - uni-app C端应用",
+  "dependencies": {
+    "pinia": "^2.1.7",
+    "uview-plus": "^3.3.49"
+  }
+}

@@ -1,0 +1,19 @@
+国外IDE
+Codex = ChatGpt家的IDE
+ClaudeCode = Anthropic公司的产品(命令行式的,可集成在vscode等IDE使用)
+Cursor = 程序员主流的国外项目开发IDE
+
+国内IDE
+Trae = 字节公司的
+WorkBuddy = 腾讯的
+
+AI大模型
+Deepseek
+QianWen
+MiMo
+
+国外AI模型
+ClaudeCode
+ChatGPt
+Gemini
+
